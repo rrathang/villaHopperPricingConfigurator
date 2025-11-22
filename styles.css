@@ -1,1 +1,13 @@
-body { font-family: Arial; }
+body { font-family: Arial; background: #f5f7fb; padding: 24px; }
+.card { background: #fff; padding: 18px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.1); max-width: 980px; margin: auto; }
+.grid { display: grid; grid-template-columns: 1fr 350px; gap: 20px; }
+label { font-size: 13px; margin-bottom: 4px; display: block; }
+input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px; }
+.btn { background: #0b74ff; color: #fff; padding: 10px; border-radius: 8px; border: none; cursor: pointer; margin-top: 10px; }
+.btn.green { background: #10a37f; }
+.btn.red { background: #ef4444; }
+.summary { margin-top: 14px; background: #fbfdff; padding: 12px; border: 1px solid #e0e6ff; border-radius: 10px; }
+.muted { color: #666; }
+pre { background: #111; color: #eee; padding: 10px; border-radius: 8px; }
+#roomControls > div { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.num-btn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid #bbb; background: #f0f0f0; cursor: pointer; }

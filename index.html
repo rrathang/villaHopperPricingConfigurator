@@ -1,13 +1,58 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VillaFlex Booker</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <h2>Villa Booking App</h2>
-  <script src="script.js"></script>
+<div>
+<label>Check-out</label>
+<input type="date" id="endDate" />
+</div>
+
+
+<div>
+<label>Rooms</label>
+<div id="roomControls"></div>
+</div>
+
+
+<div>
+<label>Additional Beds (max 6)</label>
+<input type="number" id="extraBeds" min="0" max="6" value="0" />
+</div>
+
+
+<div>
+<label>Number of Guests</label>
+<input type="number" id="guests" min="1" value="2" />
+</div>
+
+
+<div>
+<label>Meal Option</label>
+<select id="mealOption">
+<option value="none">No meals</option>
+<option value="dinner">Only Dinner</option>
+<option value="breakfast_dinner">Breakfast + Dinner</option>
+</select>
+</div>
+
+
+<button class="btn" id="calcBtn">Calculate</button>
+<button class="btn green" id="exportBtn">Export Booking JSON</button>
+
+
+<div id="summaryBox" class="summary">No calculation yet.</div>
+</div>
+
+
+<!-- Pricing JSON Editor -->
+<div>
+<label>Pricing JSON (editable)</label>
+<textarea id="pricingJson" rows="18"></textarea>
+<button class="btn" id="loadJson">Load JSON</button>
+<button class="btn red" id="resetJson">Reset Default</button>
+<pre id="outputJson">{ }</pre>
+</div>
+</div>
+</div>
+
+
+<script src="script.js"></script>
 </body>
 </html>
