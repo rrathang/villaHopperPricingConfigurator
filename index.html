@@ -1,70 +1,129 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Villa Booking</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Villa Pricing Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-  <div class="card">
-    <h2>Villa Booking — Static Demo</h2>
-    <p class="muted">Static booking calculator using plain JS + JSON pricing file.</p>
 
-    <div class="grid">
-      <!-- Booking Form -->
-      <div>
-        <div>
-          <label>Check-in</label>
-          <input type="date" id="startDate" />
+  <div class="app-container">
+    <header class="app-header">
+      <h1>Villa Pricing Calculator</h1>
+      <p>Configure your stay details below</p>
+    </header>
+
+    <main class="calculator-grid">
+      <!-- Configuration Section -->
+      <section class="config-panel">
+
+        <!-- Seasonal Base Pricing -->
+        <div class="card toggle-card">
+          <div class="card-header">
+            <h2>Base Pricing</h2>
+            <span class="badge">1 Room, 2 Guests</span>
+          </div>
+          <div class="form-group">
+            <label for="seasonSelect">Select Season</label>
+            <div class="select-wrapper">
+              <select id="seasonSelect">
+                <option value="regular">Regular Season</option>
+                <option value="weekend">Weekend</option>
+                <option value="peak">Peak Season</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="basePrice">Base Price (₹)</label>
+            <input type="number" id="basePrice" value="4000">
+            <small class="helper-text">Includes 1 room & 2 guests</small>
+          </div>
         </div>
 
-        <div>
-          <label>Check-out</label>
-          <input type="date" id="endDate" />
+        <!-- Cleaning Charges -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Cleaning Charges</h2>
+          </div>
+          <div class="form-group">
+            <label for="cleaningPrice">Cleaning Fee (₹)</label>
+            <input type="number" id="cleaningPrice" value="500">
+          </div>
         </div>
 
-        <div>
-          <label>Rooms</label>
-          <div id="roomControls"></div>
+        <!-- Additional Rooms -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Additional Rooms</h2>
+            <button id="addRoomBtn" class="btn-secondary small">+ Add Room</button>
+          </div>
+          <div class="form-group">
+            <label for="roomPriceMaster">Price Per Addt'l Room (₹)</label>
+            <input type="number" id="roomPriceMaster" value="1500">
+          </div>
+          <div id="roomsContainer" class="dynamic-list">
+            <!-- Dynamic rooms will appear here -->
+          </div>
         </div>
 
-        <div>
-          <label>Additional Beds (max 6)</label>
-          <input type="number" id="extraBeds" min="0" max="6" value="0" />
+        <!-- Additional Guests -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Additional Guests</h2>
+          </div>
+          <div class="form-row">
+            <div class="form-group half">
+              <label for="guestCount">Extra Guests</label>
+              <input type="number" id="guestCount" value="0" min="0">
+            </div>
+            <div class="form-group half">
+              <label for="guestPrice">Price/Guest (₹)</label>
+              <input type="number" id="guestPrice" value="750">
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label>Number of Guests</label>
-          <input type="number" id="guests" min="1" value="2" />
+      </section>
+
+      <!-- Price Breakdown Section -->
+      <section class="summary-panel">
+        <div class="sticky-summary">
+          <h2>Price Breakdown</h2>
+          <div class="pricing-rows">
+            <div class="price-row">
+              <span>Base Price</span>
+              <span id="displayBasePrice">₹4,000</span>
+            </div>
+            <div class="price-row">
+              <span>Additional Rooms</span>
+              <span id="displayRoomTotal">₹0</span>
+            </div>
+            <div class="price-row">
+              <span>Additional Guests</span>
+              <span id="displayGuestTotal">₹0</span>
+            </div>
+            <div class="price-row">
+              <span>Cleaning Charges</span>
+              <span id="displayCleaning">₹500</span>
+            </div>
+            <div class="divider"></div>
+            <div class="price-row total">
+              <span>Grand Total</span>
+              <span id="displayGrandTotal">₹4,500</span>
+            </div>
+            <button id="copyBtn" class="btn-primary full-width mt-20">Copy for WhatsApp</button>
+          </div>
         </div>
-
-        <div>
-          <label>Meal Option</label>
-          <select id="mealOption">
-            <option value="none">No meals</option>
-            <option value="dinner">Only Dinner</option>
-            <option value="breakfast_dinner">Breakfast + Dinner</option>
-          </select>
-        </div>
-
-        <button class="btn" id="calcBtn">Calculate</button>
-        <button class="btn green" id="exportBtn">Export Booking JSON</button>
-
-        <div id="summaryBox" class="summary">No calculation yet.</div>
-      </div>
-
-      <!-- Pricing JSON Editor -->
-      <div>
-        <label>Pricing JSON (editable)</label>
-        <textarea id="pricingJson" rows="18"></textarea>
-        <button class="btn" id="loadJson">Load JSON</button>
-        <button class="btn red" id="resetJson">Reset Default</button>
-        <pre id="outputJson">{ }</pre>
-      </div>
-    </div>
+      </section>
+    </main>
   </div>
 
   <script src="script.js"></script>
 </body>
+
 </html>

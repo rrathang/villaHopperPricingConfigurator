@@ -1,13 +1,279 @@
-body { font-family: Arial; background: #f5f7fb; padding: 24px; }
-.card { background: #fff; padding: 18px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.1); max-width: 980px; margin: auto; }
-.grid { display: grid; grid-template-columns: 1fr 350px; gap: 20px; }
-label { font-size: 13px; margin-bottom: 4px; display: block; }
-input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px; }
-.btn { background: #0b74ff; color: #fff; padding: 10px; border-radius: 8px; border: none; cursor: pointer; margin-top: 10px; }
-.btn.green { background: #10a37f; }
-.btn.red { background: #ef4444; }
-.summary { margin-top: 14px; background: #fbfdff; padding: 12px; border: 1px solid #e0e6ff; border-radius: 10px; }
-.muted { color: #666; }
-pre { background: #111; color: #eee; padding: 10px; border-radius: 8px; }
-#roomControls > div { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-.num-btn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid #bbb; background: #f0f0f0; cursor: pointer; }
+:root {
+    --primary-color: #2c3e50;
+    --accent-color: #e67e22;
+    /* Premium Orange/Gold */
+    --accent-hover: #d35400;
+    --bg-color: #f4f7f6;
+    --card-bg: #ffffff;
+    --text-main: #34495e;
+    --text-muted: #7f8c8d;
+    --border-color: #ecf0f1;
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --radius: 8px;
+    --font-family: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.app-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.app-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.app-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.app-header p {
+    color: var(--text-muted);
+}
+
+/* Grid Layout */
+.calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .calculator-grid {
+        grid-template-columns: 2fr 1fr;
+        align-items: start;
+    }
+}
+
+/* Cards */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.card-header h2 {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.badge {
+    background: var(--bg-color);
+    color: var(--text-muted);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-group.half {
+    flex: 1;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.helper-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Buttons */
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+/* Dynamic List */
+.dynamic-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: var(--bg-color);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Summary Panel */
+.summary-panel {
+    background: var(--primary-color);
+    color: white;
+    padding: 25px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+}
+
+.sticky-summary {
+    position: sticky;
+    top: 20px;
+}
+
+.summary-panel h2 {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 15px 0;
+}
+
+.price-row.total {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    opacity: 1;
+}
+
+/* Mobile Tweaks */
+@media (max-width: 600px) {
+    .pricing-rows {
+        font-size: 0.9rem;
+    }
+}
+
+/* Primary Button */
+.btn-primary {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.full-width {
+    width: 100%;
+    display: block;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
