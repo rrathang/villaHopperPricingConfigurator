@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const BASE_PRICE = 2000;
   const ROOM_PRICE = 3000;
   const EXTRA_BED_PRICE = 1000;
+  const BREAKFAST_PRICE = 200;
+  const DINNER_PRICE = 500;
 
   // DOM Elements - Inputs
   const roomCheckboxes = document.querySelectorAll('.room-checkbox');
@@ -22,14 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const room3ExtraBeds = document.getElementById('room3ExtraBeds');
   const room4ExtraBeds = document.getElementById('room4ExtraBeds');
   
+  const breakfastOption = document.getElementById('breakfastOption');
+  const dinnerOption = document.getElementById('dinnerOption');
   const cleaningPriceInput = document.getElementById('cleaningPrice');
 
   // DOM Elements - Displays
   const displayBasePrice = document.getElementById('displayBasePrice');
   const displayRoomTotal = document.getElementById('displayRoomTotal');
   const displayBedTotal = document.getElementById('displayBedTotal');
+  const displayMealsTotal = document.getElementById('displayMealsTotal');
   const displayCleaning = document.getElementById('displayCleaning');
   const displayGrandTotal = document.getElementById('displayGrandTotal');
+  const displayTotalGuests = document.getElementById('displayTotalGuests');
+  const guestBanner = document.getElementById('guestBanner');
 
   /**
    * Formatting Utility
@@ -48,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       addonSection.classList.add('disabled');
       extraBedsInput.disabled = true;
-      extraBedsInput.value = 0; // reset
+      extraBedsInput.value = "0"; // reset select
     }
   };
 
@@ -69,12 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Base Price
     const baseTotal = BASE_PRICE;
 
-    // 2. Room Total
+    // 2. Room Total & Base Guests
     let activeRooms = 0;
     roomCheckboxes.forEach(cb => {
       if (cb.checked) activeRooms++;
     });
     const roomTotal = activeRooms * ROOM_PRICE;
+    const baseGuests = activeRooms * 2;
 
     // 3. Extra Beds Total
     const extraBeds1 = parseInt(room1ExtraBeds.value) || 0;
@@ -85,18 +93,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalExtraBeds = extraBeds1 + extraBeds2 + extraBeds3 + extraBeds4;
     const bedTotal = totalExtraBeds * EXTRA_BED_PRICE;
 
-    // 4. Cleaning
+    // 4. Total Guests Calc
+    const totalGuests = baseGuests + totalExtraBeds;
+    
+    // Toggle Guest Banner Visibility
+    if (totalGuests > 0) {
+      guestBanner.classList.remove('hidden');
+    } else {
+      guestBanner.classList.add('hidden');
+    }
+
+    // 5. Meals Selection
+    let mealsTotal = 0;
+    if (breakfastOption.checked) {
+      mealsTotal += (totalGuests * BREAKFAST_PRICE);
+    }
+    if (dinnerOption.checked) {
+      mealsTotal += (totalGuests * DINNER_PRICE);
+    }
+
+    // 6. Cleaning
     const cleaningPrice = parseFloat(cleaningPriceInput.value) || 0;
 
-    // 5. Grand Total
-    const grandTotal = baseTotal + roomTotal + bedTotal + cleaningPrice;
+    // 7. Grand Total
+    const grandTotal = baseTotal + roomTotal + bedTotal + mealsTotal + cleaningPrice;
 
     // Update UI
     displayBasePrice.textContent = formatCurrency(baseTotal);
     displayRoomTotal.textContent = formatCurrency(roomTotal);
     displayBedTotal.textContent = formatCurrency(bedTotal);
+    displayMealsTotal.textContent = formatCurrency(mealsTotal);
     displayCleaning.textContent = formatCurrency(cleaningPrice);
     displayGrandTotal.textContent = formatCurrency(grandTotal);
+    displayTotalGuests.textContent = totalGuests;
   };
 
   /**
@@ -112,10 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Listen to extra bed inputs
-  room1ExtraBeds.addEventListener('input', calculateTotal);
-  room2ExtraBeds.addEventListener('input', calculateTotal);
-  room3ExtraBeds.addEventListener('input', calculateTotal);
-  room4ExtraBeds.addEventListener('input', calculateTotal);
+  room1ExtraBeds.addEventListener('change', calculateTotal);
+  room2ExtraBeds.addEventListener('change', calculateTotal);
+  room3ExtraBeds.addEventListener('change', calculateTotal);
+  room4ExtraBeds.addEventListener('change', calculateTotal);
+
+  // Listen to meal selections
+  breakfastOption.addEventListener('change', calculateTotal);
+  dinnerOption.addEventListener('change', calculateTotal);
 
   // Listen to cleaning charge input
   if (cleaningPriceInput) {
@@ -149,8 +182,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const extraBeds4 = parseInt(room4ExtraBeds.value) || 0;
       const totalExtraBeds = extraBeds1 + extraBeds2 + extraBeds3 + extraBeds4;
       const bedTotal = totalExtraBeds * EXTRA_BED_PRICE;
+      
+      const totalGuests = (activeRooms * 2) + totalExtraBeds;
+      
+      let mealsTotal = 0;
+      const mealsIncluded = [];
+      if (breakfastOption.checked) {
+        mealsTotal += (totalGuests * BREAKFAST_PRICE);
+        mealsIncluded.push(`Breakfast (${formatCurrency(BREAKFAST_PRICE)}/hd)`);
+      }
+      if (dinnerOption.checked) {
+        mealsTotal += (totalGuests * DINNER_PRICE);
+        mealsIncluded.push(`Dinner (${formatCurrency(DINNER_PRICE)}/hd)`);
+      }
+
       const cleaningPrice = parseFloat(cleaningPriceInput.value) || 0;
-      const grandTotal = BASE_PRICE + roomTotal + bedTotal + cleaningPrice;
+      const grandTotal = BASE_PRICE + roomTotal + bedTotal + mealsTotal + cleaningPrice;
 
       // Format String (WhatsApp Style)
       let textToCopy = `*Villa Rental Quote* 🏡\n\n`;
@@ -165,6 +212,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (totalExtraBeds > 0) {
         textToCopy += `*Extra Beds:* \n`;
         textToCopy += `${totalExtraBeds} x ${formatCurrency(EXTRA_BED_PRICE)} = ${formatCurrency(bedTotal)}\n\n`;
+      }
+      
+      textToCopy += `👥 *Total Guests:* ${totalGuests}\n\n`;
+
+      if (mealsIncluded.length > 0) {
+        textToCopy += `*Meals Included:* ${mealsIncluded.join(' + ')}\n`;
+        textToCopy += `Total Meal Cost: ${formatCurrency(mealsTotal)}\n\n`;
       }
 
       textToCopy += `*Cleaning Charges:* ${formatCurrency(cleaningPrice)}\n\n`;
