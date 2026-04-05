@@ -1,25 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // State
-  const seasonalPrices = {
-    regular: 4000,
-    weekend: 5000,
-    peak: 6000
-  };
 
-  // DOM Elements
-  const seasonSelect = document.getElementById('seasonSelect');
-  const basePriceInput = document.getElementById('basePrice');
+  // Configuration Constants
+  const BASE_PRICE = 2000;
+  const ROOM_PRICE = 3000;
+  const EXTRA_BED_PRICE = 1000;
+
+  // DOM Elements - Inputs
+  const roomCheckboxes = document.querySelectorAll('.room-checkbox');
+  const room1Checkbox = document.getElementById('room1');
+  const room2Checkbox = document.getElementById('room2');
+  const room3Checkbox = document.getElementById('room3');
+  const room4Checkbox = document.getElementById('room4');
+  
+  const room1Addons = document.getElementById('room1Addons');
+  const room2Addons = document.getElementById('room2Addons');
+  const room3Addons = document.getElementById('room3Addons');
+  const room4Addons = document.getElementById('room4Addons');
+  
+  const room1ExtraBeds = document.getElementById('room1ExtraBeds');
+  const room2ExtraBeds = document.getElementById('room2ExtraBeds');
+  const room3ExtraBeds = document.getElementById('room3ExtraBeds');
+  const room4ExtraBeds = document.getElementById('room4ExtraBeds');
+  
   const cleaningPriceInput = document.getElementById('cleaningPrice');
-  const roomPriceMasterInput = document.getElementById('roomPriceMaster');
-  const addRoomBtn = document.getElementById('addRoomBtn');
-  const roomsContainer = document.getElementById('roomsContainer');
-  const guestCountInput = document.getElementById('guestCount');
-  const guestPriceInput = document.getElementById('guestPrice');
 
-  // Display Elements
+  // DOM Elements - Displays
   const displayBasePrice = document.getElementById('displayBasePrice');
   const displayRoomTotal = document.getElementById('displayRoomTotal');
-  const displayGuestTotal = document.getElementById('displayGuestTotal');
+  const displayBedTotal = document.getElementById('displayBedTotal');
   const displayCleaning = document.getElementById('displayCleaning');
   const displayGrandTotal = document.getElementById('displayGrandTotal');
 
@@ -31,105 +39,91 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   /**
+   * Helper to update specific addon row
+   */
+  const toggleAddon = (checkbox, addonSection, extraBedsInput) => {
+    if (checkbox.checked) {
+      addonSection.classList.remove('disabled');
+      extraBedsInput.disabled = false;
+    } else {
+      addonSection.classList.add('disabled');
+      extraBedsInput.disabled = true;
+      extraBedsInput.value = 0; // reset
+    }
+  };
+
+  /**
+   * Toggle Extra Bed Inputs Based on Room Selection
+   */
+  const updateAddonStatus = () => {
+    toggleAddon(room1Checkbox, room1Addons, room1ExtraBeds);
+    toggleAddon(room2Checkbox, room2Addons, room2ExtraBeds);
+    toggleAddon(room3Checkbox, room3Addons, room3ExtraBeds);
+    toggleAddon(room4Checkbox, room4Addons, room4ExtraBeds);
+  };
+
+  /**
    * Core Calculation Logic
    */
   const calculateTotal = () => {
     // 1. Base Price
-    const basePrice = parseFloat(basePriceInput.value) || 0;
+    const baseTotal = BASE_PRICE;
 
-    // 2. Cleaning
+    // 2. Room Total
+    let activeRooms = 0;
+    roomCheckboxes.forEach(cb => {
+      if (cb.checked) activeRooms++;
+    });
+    const roomTotal = activeRooms * ROOM_PRICE;
+
+    // 3. Extra Beds Total
+    const extraBeds1 = parseInt(room1ExtraBeds.value) || 0;
+    const extraBeds2 = parseInt(room2ExtraBeds.value) || 0;
+    const extraBeds3 = parseInt(room3ExtraBeds.value) || 0;
+    const extraBeds4 = parseInt(room4ExtraBeds.value) || 0;
+    
+    const totalExtraBeds = extraBeds1 + extraBeds2 + extraBeds3 + extraBeds4;
+    const bedTotal = totalExtraBeds * EXTRA_BED_PRICE;
+
+    // 4. Cleaning
     const cleaningPrice = parseFloat(cleaningPriceInput.value) || 0;
 
-    // 3. Additional Rooms
-    let roomsTotal = 0;
-    const roomInputs = document.querySelectorAll('.room-price-input');
-    roomInputs.forEach(input => {
-      roomsTotal += parseFloat(input.value) || 0;
-    });
-
-    // 4. Additional Guests
-    const guestCount = parseFloat(guestCountInput.value) || 0;
-    const guestPrice = parseFloat(guestPriceInput.value) || 0;
-    const guestsTotal = guestCount * guestPrice;
-
     // 5. Grand Total
-    const grandTotal = basePrice + cleaningPrice + roomsTotal + guestsTotal;
+    const grandTotal = baseTotal + roomTotal + bedTotal + cleaningPrice;
 
     // Update UI
-    displayBasePrice.textContent = formatCurrency(basePrice);
+    displayBasePrice.textContent = formatCurrency(baseTotal);
+    displayRoomTotal.textContent = formatCurrency(roomTotal);
+    displayBedTotal.textContent = formatCurrency(bedTotal);
     displayCleaning.textContent = formatCurrency(cleaningPrice);
-    displayRoomTotal.textContent = formatCurrency(roomsTotal);
-    displayGuestTotal.textContent = formatCurrency(guestsTotal);
     displayGrandTotal.textContent = formatCurrency(grandTotal);
   };
 
   /**
-   * Event Handlers
+   * Event Listeners
    */
-
-  // Season Change
-  seasonSelect.addEventListener('change', (e) => {
-    const selected = e.target.value;
-    if (seasonalPrices[selected]) {
-      basePriceInput.value = seasonalPrices[selected];
-    }
-    // If 'custom', we leave the current value or let user edit it
-    calculateTotal();
-  });
-
-  // Add Room
-  addRoomBtn.addEventListener('click', () => {
-    const roomCount = roomsContainer.children.length + 1;
-    const defaultPrice = roomPriceMasterInput.value;
-
-    const roomRow = document.createElement('div');
-    roomRow.classList.add('dynamic-row');
-    roomRow.innerHTML = `
-            <span>Room ${roomCount + 1}</span> <!-- +1 because Base includes Room 1 -->
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <input type="number" class="room-price-input" value="${defaultPrice}" style="width: 100px;">
-                <button class="btn-danger remove-room">&times;</button>
-            </div>
-        `;
-
-    // Add event listener to new input
-    const input = roomRow.querySelector('input');
-    input.addEventListener('input', calculateTotal);
-
-    // Add event listener to remove button
-    const removeBtn = roomRow.querySelector('.remove-room');
-    removeBtn.addEventListener('click', () => {
-      roomRow.remove();
+  
+  // Listen to room checkboxes
+  roomCheckboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      updateAddonStatus();
       calculateTotal();
-      updateRoomLabels();
     });
-
-    roomsContainer.appendChild(roomRow);
-    calculateTotal();
   });
 
-  // Update Room Labels (e.g. after deletion)
-  const updateRoomLabels = () => {
-    const rows = roomsContainer.querySelectorAll('.dynamic-row');
-    rows.forEach((row, index) => {
-      const label = row.querySelector('span');
-      label.textContent = `Room ${index + 2}`; // Start from Room 2
-    });
-  };
+  // Listen to extra bed inputs
+  room1ExtraBeds.addEventListener('input', calculateTotal);
+  room2ExtraBeds.addEventListener('input', calculateTotal);
+  room3ExtraBeds.addEventListener('input', calculateTotal);
+  room4ExtraBeds.addEventListener('input', calculateTotal);
 
-  // Global Input Listener for Static Inputs
-  const staticInputs = [
-    basePriceInput,
-    cleaningPriceInput,
-    guestCountInput,
-    guestPriceInput
-  ];
+  // Listen to cleaning charge input
+  if (cleaningPriceInput) {
+    cleaningPriceInput.addEventListener('input', calculateTotal);
+  }
 
-  staticInputs.forEach(input => {
-    input.addEventListener('input', calculateTotal);
-  });
-
-  // Initial Calculation
+  // Initial UI Setup & Calculation
+  updateAddonStatus();
   calculateTotal();
 
   /**
@@ -139,40 +133,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (copyBtn) {
     copyBtn.addEventListener('click', () => {
-      // Gather Data
-      const basePrice = parseFloat(basePriceInput.value) || 0;
-      const cleaningPrice = parseFloat(cleaningPriceInput.value) || 0;
-      const guestCount = parseFloat(guestCountInput.value) || 0;
-      const guestPrice = parseFloat(guestPriceInput.value) || 0;
-      const guestsTotal = guestCount * guestPrice;
-
-      let roomsText = "";
-      let roomsTotal = 0;
-      const roomInputs = document.querySelectorAll('.room-price-input');
-      roomInputs.forEach((input, index) => {
-        const val = parseFloat(input.value) || 0;
-        roomsTotal += val;
-        roomsText += `Room ${index + 2}: ${formatCurrency(val)}\n`;
+      let activeRooms = 0;
+      let activeRoomNames = [];
+      roomCheckboxes.forEach((cb, index) => {
+        if (cb.checked) {
+          activeRooms++;
+          activeRoomNames.push(`Room ${index + 1}`);
+        }
       });
-
-      const grandTotal = basePrice + cleaningPrice + roomsTotal + guestsTotal;
-      const seasonName = seasonSelect.options[seasonSelect.selectedIndex].text;
+      
+      const roomTotal = activeRooms * ROOM_PRICE;
+      const extraBeds1 = parseInt(room1ExtraBeds.value) || 0;
+      const extraBeds2 = parseInt(room2ExtraBeds.value) || 0;
+      const extraBeds3 = parseInt(room3ExtraBeds.value) || 0;
+      const extraBeds4 = parseInt(room4ExtraBeds.value) || 0;
+      const totalExtraBeds = extraBeds1 + extraBeds2 + extraBeds3 + extraBeds4;
+      const bedTotal = totalExtraBeds * EXTRA_BED_PRICE;
+      const cleaningPrice = parseFloat(cleaningPriceInput.value) || 0;
+      const grandTotal = BASE_PRICE + roomTotal + bedTotal + cleaningPrice;
 
       // Format String (WhatsApp Style)
-      const textToCopy = `*Villa Rental Quote* 🏡
+      let textToCopy = `*Villa Rental Quote* 🏡\n\n`;
+      textToCopy += `*Base Booking Fee:* ${formatCurrency(BASE_PRICE)}\n`;
+      textToCopy += `_(Venue access charge)_\n\n`;
 
-*Base Price (${seasonName}):* ${formatCurrency(basePrice)}
-_(Includes 1 Room & 2 Guests)_
+      if (activeRooms > 0) {
+        textToCopy += `*Selected Rooms:* (${activeRoomNames.join(', ')})\n`;
+        textToCopy += `${activeRooms} x ${formatCurrency(ROOM_PRICE)} = ${formatCurrency(roomTotal)}\n\n`;
+      }
 
-${roomsTotal > 0 ? `*Additional Rooms:*
-${roomsText}` : ''}
-${guestCount > 0 ? `*Extra Guests:* ${guestCount} x ${formatCurrency(guestPrice)} = ${formatCurrency(guestsTotal)}
-` : ''}
-*Cleaning Charges:* ${formatCurrency(cleaningPrice)}
+      if (totalExtraBeds > 0) {
+        textToCopy += `*Extra Beds:* \n`;
+        textToCopy += `${totalExtraBeds} x ${formatCurrency(EXTRA_BED_PRICE)} = ${formatCurrency(bedTotal)}\n\n`;
+      }
 
------------------------------
-*GRAND TOTAL: ${formatCurrency(grandTotal)}*
------------------------------`;
+      textToCopy += `*Cleaning Charges:* ${formatCurrency(cleaningPrice)}\n\n`;
+      textToCopy += `-----------------------------\n`;
+      textToCopy += `*GRAND TOTAL: ${formatCurrency(grandTotal)}*\n`;
+      textToCopy += `-----------------------------`;
 
       // Copy API
       navigator.clipboard.writeText(textToCopy).then(() => {

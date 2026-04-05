@@ -21,27 +21,124 @@
       <!-- Configuration Section -->
       <section class="config-panel">
 
-        <!-- Seasonal Base Pricing -->
-        <div class="card toggle-card">
+        <div class="section-title">
+          <h2>Select Your Rooms</h2>
+          <p>Base booking fee is ₹2,000. Each room is ₹3,000.</p>
+        </div>
+
+        <!-- Room 1 -->
+        <div class="card room-card">
           <div class="card-header">
-            <h2>Base Pricing</h2>
-            <span class="badge">1 Room, 2 Guests</span>
+            <div class="flex-row">
+              <input type="checkbox" id="room1" class="room-checkbox" value="3000">
+              <label for="room1"><h2>Room 1</h2></label>
+            </div>
+            <span class="badge">Up to 3 Guests</span>
           </div>
-          <div class="form-group">
-            <label for="seasonSelect">Select Season</label>
-            <div class="select-wrapper">
-              <select id="seasonSelect">
-                <option value="regular">Regular Season</option>
-                <option value="weekend">Weekend</option>
-                <option value="peak">Peak Season</option>
-                <option value="custom">Custom</option>
-              </select>
+          <div class="carousel-container">
+            <div class="carousel">
+              <img src="images/room_1.png" class="carousel-img" alt="Room 1 view">
+              <img src="images/room_1_layout.png" class="carousel-img" alt="Room 1 Layout">
             </div>
           </div>
-          <div class="form-group">
-            <label for="basePrice">Base Price (₹)</label>
-            <input type="number" id="basePrice" value="4000">
-            <small class="helper-text">Includes 1 room & 2 guests</small>
+          <div class="room-details">
+            <p><strong>Beds:</strong> King Size Bed & 1 Single Bed</p>
+            <p class="price-tag">+ ₹3,000</p>
+            <div class="addon-section disabled" id="room1Addons">
+              <hr>
+              <h4>Additional Beds</h4>
+              <div class="form-row align-center">
+                <label for="room1ExtraBeds" class="flex-1">Extra Single Beds (₹1,000 each)</label>
+                <input type="number" id="room1ExtraBeds" class="extra-bed-input" value="0" min="0" max="1" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room 2 -->
+        <div class="card room-card">
+          <div class="card-header">
+             <div class="flex-row">
+              <input type="checkbox" id="room2" class="room-checkbox" value="3000">
+              <label for="room2"><h2>Room 2</h2></label>
+            </div>
+            <span class="badge">Up to 3 Guests</span>
+          </div>
+          <div class="carousel-container">
+            <div class="carousel">
+              <img src="images/room_2.png" class="carousel-img" alt="Room 2 view">
+              <img src="images/room_2_layout.png" class="carousel-img" alt="Room 2 Layout">
+            </div>
+          </div>
+          <div class="room-details">
+            <p><strong>Beds:</strong> King Size Bed & 1 Single Bed</p>
+            <p class="price-tag">+ ₹3,000</p>
+            <div class="addon-section disabled" id="room2Addons">
+              <hr>
+              <h4>Additional Beds</h4>
+              <div class="form-row align-center">
+                <label for="room2ExtraBeds" class="flex-1">Extra Single Beds (₹1,000 each)</label>
+                <input type="number" id="room2ExtraBeds" class="extra-bed-input" value="0" min="0" max="1" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room 3 -->
+        <div class="card room-card">
+          <div class="card-header">
+            <div class="flex-row">
+              <input type="checkbox" id="room3" class="room-checkbox" value="3000">
+              <label for="room3"><h2>Room 3</h2></label>
+            </div>
+            <span class="badge">Up to 6 Guests</span>
+          </div>
+          <div class="carousel-container">
+            <div class="carousel">
+              <img src="images/room_3.png" class="carousel-img" alt="Room 3 view">
+              <img src="images/room_3_layout.png" class="carousel-img" alt="Room 3 Layout">
+            </div>
+          </div>
+          <div class="room-details">
+            <p><strong>Beds:</strong> King Size Bed & 4 Single Beds</p>
+            <p class="price-tag">+ ₹3,000</p>
+            <div class="addon-section disabled" id="room3Addons">
+              <hr>
+              <h4>Additional Beds</h4>
+              <div class="form-row align-center">
+                <label for="room3ExtraBeds" class="flex-1">Extra Single Beds (₹1,000 each)</label>
+                <input type="number" id="room3ExtraBeds" class="extra-bed-input" value="0" min="0" max="4" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room 4 -->
+        <div class="card room-card">
+          <div class="card-header">
+            <div class="flex-row">
+              <input type="checkbox" id="room4" class="room-checkbox" value="3000">
+              <label for="room4"><h2>Room 4</h2></label>
+            </div>
+            <span class="badge">Up to 3 Guests</span>
+          </div>
+          <div class="carousel-container">
+            <div class="carousel">
+              <img src="images/room_4.png" class="carousel-img" alt="Room 4 view">
+              <img src="images/room_4_layout.png" class="carousel-img" alt="Room 4 Layout">
+            </div>
+          </div>
+          <div class="room-details">
+            <p><strong>Beds:</strong> King Size Bed & 1 Single Bed</p>
+            <p class="price-tag">+ ₹3,000</p>
+            <div class="addon-section disabled" id="room4Addons">
+              <hr>
+              <h4>Additional Beds</h4>
+               <div class="form-row align-center">
+                <label for="room4ExtraBeds" class="flex-1">Extra Single Beds (₹1,000 each)</label>
+                <input type="number" id="room4ExtraBeds" class="extra-bed-input" value="0" min="0" max="1" disabled>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -56,38 +153,6 @@
           </div>
         </div>
 
-        <!-- Additional Rooms -->
-        <div class="card">
-          <div class="card-header">
-            <h2>Additional Rooms</h2>
-            <button id="addRoomBtn" class="btn-secondary small">+ Add Room</button>
-          </div>
-          <div class="form-group">
-            <label for="roomPriceMaster">Price Per Addt'l Room (₹)</label>
-            <input type="number" id="roomPriceMaster" value="1500">
-          </div>
-          <div id="roomsContainer" class="dynamic-list">
-            <!-- Dynamic rooms will appear here -->
-          </div>
-        </div>
-
-        <!-- Additional Guests -->
-        <div class="card">
-          <div class="card-header">
-            <h2>Additional Guests</h2>
-          </div>
-          <div class="form-row">
-            <div class="form-group half">
-              <label for="guestCount">Extra Guests</label>
-              <input type="number" id="guestCount" value="0" min="0">
-            </div>
-            <div class="form-group half">
-              <label for="guestPrice">Price/Guest (₹)</label>
-              <input type="number" id="guestPrice" value="750">
-            </div>
-          </div>
-        </div>
-
       </section>
 
       <!-- Price Breakdown Section -->
@@ -96,16 +161,16 @@
           <h2>Price Breakdown</h2>
           <div class="pricing-rows">
             <div class="price-row">
-              <span>Base Price</span>
-              <span id="displayBasePrice">₹4,000</span>
+              <span>Base Booking Fee</span>
+              <span id="displayBasePrice">₹2,000</span>
             </div>
             <div class="price-row">
-              <span>Additional Rooms</span>
+              <span>Selected Rooms</span>
               <span id="displayRoomTotal">₹0</span>
             </div>
             <div class="price-row">
-              <span>Additional Guests</span>
-              <span id="displayGuestTotal">₹0</span>
+              <span>Extra Beds</span>
+              <span id="displayBedTotal">₹0</span>
             </div>
             <div class="price-row">
               <span>Cleaning Charges</span>
@@ -114,7 +179,7 @@
             <div class="divider"></div>
             <div class="price-row total">
               <span>Grand Total</span>
-              <span id="displayGrandTotal">₹4,500</span>
+              <span id="displayGrandTotal">₹2,500</span>
             </div>
             <button id="copyBtn" class="btn-primary full-width mt-20">Copy for WhatsApp</button>
           </div>
